@@ -1,0 +1,22 @@
+{
+    "namespace": "global",
+    "entityName": "person",
+    "attributes": [
+        {
+            "attributeName": "Id",
+            "type": "UniqueIdentifier"
+        },
+        {
+            "attributeName": "Name",
+            "type": "Text"
+        },
+        {
+            "attributeName": "Lastname",
+            "type": "Text"
+        },
+        {
+            "attributeName": "DateOfBirth",
+            "type": "Date"
+        }
+    ]
+}

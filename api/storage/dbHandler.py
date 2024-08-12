@@ -1,7 +1,9 @@
+
 import json
 import psycopg2
 
-def getAll_person():
+# Function to execute the query and return the result
+def executeQuery(format_function, queryStatement):
     try:
         
         with open('api/db_config.json', 'r') as config_file:
@@ -12,23 +14,14 @@ def getAll_person():
         cursor = connection.cursor()
         
         # Execute the SQL query
-        cursor.execute("SELECT Id, Name, Lastname, DateOfBirth FROM person")
+        cursor.execute(queryStatement)
         
         # Fetch all rows from the executed query
         rows = cursor.fetchall()
+                        
+        result = format_function(rows)
         
-        # Format the results into a list of dictionaries
-        persons = [
-            {
-                "Id": row[0],
-                "Name": row[1],
-                "Lastname": row[2],
-                "DateOfBirth": row[3]
-            }
-            for row in rows
-        ]
-        
-        return persons
+        return result
     
     except Exception as error:
         print(f"Error fetching data from PostgreSQL table: {error}")
