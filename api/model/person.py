@@ -1,15 +1,13 @@
+import json
 import psycopg2
 
 def getAll_person():
     try:
-        # Connect to the PostgreSQL database
-        connection = psycopg2.connect(
-            dbname="nana",
-            user="nana_user",
-            password="000000",
-            host="localhost",
-            port="5432"
-        )
+        
+        with open('api/db_config.json', 'r') as config_file:
+            db_config = json.load(config_file)        
+        
+        connection = psycopg2.connect(**db_config)        
         
         cursor = connection.cursor()
         
