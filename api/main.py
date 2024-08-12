@@ -3,17 +3,13 @@ from model.definitionsProvider import getDefinition, DefinitionNotFoundException
 import model.queryHandler as queryHandler
 app = Flask(__name__)
 
-@app.route('/api/request', methods=['GET'])
-def inboundApiHandle():
+# Update the route to include entityName and queryType in the URL path
+@app.route('/api/request/<entityName>/<queryType>', methods=['GET'])
+def inboundApiHandle(entityName, queryType):
     
     # Get the query parameters and form data
     query_params = request.args.to_dict()
-    
-    # Get the queryType and entityName from the query parameters
     form_data = request.form.to_dict()
-    
-    queryType = request.args.get('queryType', default='default_value')    
-    entityName = request.args.get('entityName', default='default_value')        
 
     try:
         # Get the definition using the getDefinition function
