@@ -4,7 +4,7 @@ import model.queryHandler as queryHandler
 app = Flask(__name__)
 
 # Update the route to include entityName and queryType in the URL path
-@app.route('/api/request/<entityName>/<queryType>', methods=['GET'])
+@app.route('/api/<entityName>/<queryType>', methods=['GET'])
 def inboundApiHandle(entityName, queryType):
     
     # Get the query parameters and form data
