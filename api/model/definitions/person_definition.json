@@ -9,7 +9,16 @@
         },
         {
             "attributeName": "Name",
-            "type": "Text"
+            "type": "Text",
+            "validations" : [
+                {
+                    "type": "Required"
+                },
+                {
+                    "type": "MaxLength",
+                    "value": 3
+                }
+            ]
         },
         {
             "attributeName": "Lastname",

@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, request
 from model.definitionsProvider import getDefinition, DefinitionNotFoundException
+from model.validation import validate_form_data
 import model.queryHandler as queryHandler
 
 app = Flask(__name__)
@@ -19,6 +20,11 @@ def inboundApiHandle(entityName, queryType):
         definition = None
         response_message = str(e)
 
+    # Validate form data
+    validation_messages = validate_form_data(definition, form_data)
+    if validation_messages:
+        return jsonify({"status": "error", "messages": validation_messages}), 400
+    
     func = getattr(queryHandler, queryType, None)
 
     if callable(func):
