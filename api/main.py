@@ -10,7 +10,7 @@ def inboundApiHandle(entityName, queryType):
     
     # Get the query parameters and form data
     query_params = request.args.to_dict()
-    form_data = request.form.to_dict()
+    form_data = request.get_json() if request.is_json else request.form.to_dict()
 
     try:
         # Get the definition using the getDefinition function
