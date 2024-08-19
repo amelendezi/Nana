@@ -1,10 +1,11 @@
 from flask import Flask, jsonify, request
 from model.definitionsProvider import getDefinition, DefinitionNotFoundException
 import model.queryHandler as queryHandler
+
 app = Flask(__name__)
 
 # Update the route to include entityName and queryType in the URL path
-@app.route('/api/<entityName>/<queryType>', methods=['GET'])
+@app.route('/api/<entityName>/<queryType>', methods=['GET', 'POST'])
 def inboundApiHandle(entityName, queryType):
     
     # Get the query parameters and form data
@@ -22,7 +23,10 @@ def inboundApiHandle(entityName, queryType):
 
     if callable(func):
         if definition:
-            response_payload = func(definition)
+            if request.method == 'POST' and queryType == 'insert':
+                response_payload = func(definition, form_data)
+            else:
+                response_payload = func(definition)
             response_message = "Successful response"
         else:
             response_payload = {}
