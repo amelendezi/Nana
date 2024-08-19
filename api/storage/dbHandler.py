@@ -1,4 +1,3 @@
-
 import json
 import psycopg2
 
@@ -51,6 +50,31 @@ def executeInsert(insertStatement):
     except Exception as error:
         print(f"Error inserting data into PostgreSQL table: {error}")
         return {"Message": "Insert failed"}
+    
+    finally:
+        if cursor:
+            cursor.close()
+        if connection:
+            connection.close()
+            
+# Function to execute a truncate statement
+def executeTruncate(truncateStatement):
+    try:
+        with open('api/db_config.json', 'r') as config_file:
+            db_config = json.load(config_file)
+        
+        connection = psycopg2.connect(**db_config)
+        cursor = connection.cursor()
+        
+        # Execute the truncate statement
+        cursor.execute(truncateStatement)
+        connection.commit()
+        
+        return {"Message": "Truncate successful"}
+    
+    except Exception as error:
+        print(f"Error truncating PostgreSQL table: {error}")
+        return {"Message": "Truncate failed"}
     
     finally:
         if cursor:

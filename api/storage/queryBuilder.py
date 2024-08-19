@@ -15,3 +15,8 @@ def buildInsertQuery(definition, entity_data):
 
     query = f"INSERT INTO {entityName} ({', '.join(attributes)}) VALUES ({', '.join(values)})"
     return query
+
+def buildTruncateQuery(definition):
+    entityName = definition["entityName"]
+    query = f"TRUNCATE TABLE {entityName}"
+    return query

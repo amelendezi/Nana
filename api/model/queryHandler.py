@@ -1,5 +1,5 @@
-from storage.dbHandler import executeQuery, executeInsert
-from storage.queryBuilder import buildGetAllQuery, buildInsertQuery
+from storage.dbHandler import executeQuery, executeInsert, executeTruncate
+from storage.queryBuilder import buildGetAllQuery, buildInsertQuery, buildTruncateQuery
 from storage.queryResultParser import parse
 
 def getAll(definition):            
@@ -9,3 +9,7 @@ def getAll(definition):
 def insert(definition, entity_data):
     query = buildInsertQuery(definition, entity_data)
     return executeInsert(query)
+
+def reset(definition):
+    query = buildTruncateQuery(definition)
+    return executeTruncate(query)
