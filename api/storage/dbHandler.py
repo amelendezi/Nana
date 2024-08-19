@@ -32,3 +32,28 @@ def executeQuery(format_function, queryStatement):
             cursor.close()
         if connection:
             connection.close()
+            
+# Function to execute an insert statement
+def executeInsert(insertStatement):
+    try:
+        with open('api/db_config.json', 'r') as config_file:
+            db_config = json.load(config_file)
+        
+        connection = psycopg2.connect(**db_config)
+        cursor = connection.cursor()
+        
+        # Execute the insert statement
+        cursor.execute(insertStatement)
+        connection.commit()
+        
+        return {"Message": "Insert successful"}
+    
+    except Exception as error:
+        print(f"Error inserting data into PostgreSQL table: {error}")
+        return {"Message": "Insert failed"}
+    
+    finally:
+        if cursor:
+            cursor.close()
+        if connection:
+            connection.close()

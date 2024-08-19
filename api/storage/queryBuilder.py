@@ -4,3 +4,11 @@ def buildGetAllQuery(definition):
     attributes = [attr["attributeName"] for attr in definition["attributes"]]
     query = f"SELECT {', '.join(attributes)} FROM {entityName}"
     return query
+
+def buildInsertQuery(definition, entity_data):
+    entityName = definition["entityName"]
+    attributes = [attr["attributeName"] for attr in definition["attributes"] if attr["attributeName"] in entity_data]
+    values = [f"'{entity_data[attr]}'" for attr in attributes]
+    
+    query = f"INSERT INTO {entityName} ({', '.join(attributes)}) VALUES ({', '.join(values)})"
+    return query
