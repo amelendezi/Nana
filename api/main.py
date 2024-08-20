@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request
-from model.definitionsProvider import getDefinition, DefinitionNotFoundException
-from model.validation import validate_form_data
-import model.queryHandler as queryHandler
+from model.definitions_provider import DefinitionsProvider, DefinitionNotFoundException
+from model.validation_handler import ValidationHandler
+from model.request_handler import RequestHandler
 
 app = Flask(__name__)
 
@@ -15,24 +15,30 @@ def inboundApiHandle(entityName, queryType):
 
     try:
         # Get the definition using the getDefinition function
-        definition = getDefinition(entityName)
+        definitions_provider = DefinitionsProvider()
+        definition = definitions_provider.getDefinition(entityName)
+        
     except DefinitionNotFoundException as e:
         definition = None
-        response_message = str(e)
+        response_message = str(e)    
 
     # Validate form data
-    validation_messages = validate_form_data(definition, form_data)
-    if validation_messages:
-        return jsonify({"status": "error", "messages": validation_messages}), 400
+    validation_handler = ValidationHandler()
     
-    func = getattr(queryHandler, queryType, None)
+    if(queryType == 'insert'):
+        validation_messages = validation_handler.validate_form_data(definition, form_data)
+        if validation_messages:
+            return jsonify({"status": "error", "messages": validation_messages}), 400
 
-    if callable(func):
+    http_request_handler = RequestHandler()
+    handle_http_request_function = getattr(http_request_handler, queryType)
+
+    if callable(handle_http_request_function):
         if definition:
             if request.method == 'POST' and queryType == 'insert':
-                response_payload = func(definition, form_data)
+                response_payload = handle_http_request_function(definition, form_data)
             else:
-                response_payload = func(definition)
+                response_payload = handle_http_request_function(definition)
             response_message = "Successful response"
         else:
             response_payload = {}

@@ -16,7 +16,7 @@
                 },
                 {
                     "type": "MaxLength",
-                    "value": 3
+                    "value": 50
                 }
             ]
         },
