@@ -1,15 +1,4 @@
-from abc import ABC, abstractmethod
-
-class AttributeValidation(ABC):
-    @abstractmethod
-    def validate(self, attribute_name, value):
-        pass
-
-class RequiredValidation(AttributeValidation):
-    def validate(self, attribute_name, value):
-        if value is None or value == "":
-            return f"{attribute_name} is required."
-        return None
+from model.validations.attribute_validation import AttributeValidation
 
 class MaxLengthValidation(AttributeValidation):
     def __init__(self, max_length):

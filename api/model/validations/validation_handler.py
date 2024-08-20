@@ -1,4 +1,6 @@
-from model.attribute_validation import AttributeValidation, RequiredValidation, MaxLengthValidation
+from model.validations.attribute_validation import AttributeValidation
+from model.validations.required_validation import RequiredValidation 
+from model.validations.max_length_validation import MaxLengthValidation
 
 class ValidationHandler:
     

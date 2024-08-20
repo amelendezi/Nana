@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request
 from model.definitions_provider import DefinitionsProvider, DefinitionNotFoundException
-from model.validation_handler import ValidationHandler
+from model.validations.validation_handler import ValidationHandler
 from model.request_handler import RequestHandler
 
 app = Flask(__name__)
