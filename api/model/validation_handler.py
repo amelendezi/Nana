@@ -1,20 +1,12 @@
+from model.attribute_validation import AttributeValidation, RequiredValidation, MaxLengthValidation
 
 class ValidationHandler:
     
     def __init__(self) -> None:    
         pass
     
-    def validate_required(self, attribute_name, value):
-        if value is None or value == "":
-            return f"{attribute_name} is required."
-        return None
-
-    def validate_max_length(self, attribute_name, value, max_length):
-        if value is None:
-            return None
-        if len(value) > max_length:
-            return f"{attribute_name} exceeds maximum length of {max_length}."
-        return None
+    def apply_validation(self, validation: AttributeValidation, attribute_name, value):
+        return validation.validate(attribute_name, value)
 
     def validate_form_data(self, definition, form_data):
         response_messages = []
@@ -26,20 +18,18 @@ class ValidationHandler:
             value = form_data.get(attribute_name)
             
             for validation in validations:
+                validation_type = validation.get("type")
+                            
+                if validation_type == "Required":
+                    validator = RequiredValidation()
+                elif validation_type == "MaxLength":
+                    max_length = int(validation.get("value"))
+                    validator = MaxLengthValidation(max_length)
+                else:
+                    continue
                 
-                validationType = validation.get("type")
-                
-                # Check if the validation is required
-                if validationType == "Required":
-                    message = self.validate_required(attribute_name, value)
-                    if message:
-                        response_messages.append(message)
-                        
-                # Check if the validation is MaxLength
-                elif validationType == "MaxLength":
-                    max_length = int(validation.get("value"))                
-                    message = self.validate_max_length(attribute_name, value, max_length)
-                    if message:
-                        response_messages.append(message)
+                message = self.apply_validation(validator, attribute_name, value)
+                if message:
+                    response_messages.append(message)
         
         return response_messages
