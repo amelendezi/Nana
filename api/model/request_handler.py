@@ -4,13 +4,13 @@ from storage.sql_result_parser import SQLResultParser
 from model.behavior_handler import BehaviorHandler
 
 class RequestHandler:
+    
     def __init__(self) -> None:
         self.db_handler = DBHandler()
         self.statement_builder = SQLStatementBuilder()
         self.behavior_handler = BehaviorHandler()
         self.sql_result_parser = SQLResultParser()
         
-
     def get_all(self, definition):            
         query = self.statement_builder.build_get_all_query(definition)
         return self.db_handler.execute_query(lambda rows: self.sql_result_parser.map_rows_to_definition_result(rows, definition), query)

@@ -2,6 +2,7 @@ import json
 import os
 
 class DefinitionNotFoundException(Exception):
+    
 	def __init__(self, entity):
 		super().__init__(f"Definition for entity '{entity}' not found.")
 
