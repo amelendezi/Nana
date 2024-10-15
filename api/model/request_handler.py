@@ -1,4 +1,4 @@
-from storage.sql_handler import DBHandler
+from storage.sql_handler import SQLHandler
 from storage.sql_statement_builder import SQLStatementBuilder
 from storage.sql_result_parser import SQLResultParser
 from model.behavior_handler import BehaviorHandler
@@ -6,7 +6,7 @@ from model.behavior_handler import BehaviorHandler
 class RequestHandler:
     
     def __init__(self) -> None:
-        self.db_handler = DBHandler()
+        self.db_handler = SQLHandler()
         self.statement_builder = SQLStatementBuilder()
         self.behavior_handler = BehaviorHandler()
         self.sql_result_parser = SQLResultParser()

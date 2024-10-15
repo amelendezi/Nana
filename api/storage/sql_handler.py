@@ -1,7 +1,7 @@
 import json
 import psycopg2
 
-class DBHandler:
+class SQLHandler:
         
     def __init__(self, config_path='api/db_config.json') -> None:
         with open(config_path, 'r') as config_file:
