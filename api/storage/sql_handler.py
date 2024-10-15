@@ -2,15 +2,14 @@ import json
 import psycopg2
 
 class SQLHandler:
-        
-    def __init__(self, config_path='api/db_config.json') -> None:
-        with open(config_path, 'r') as config_file:
-            self.db_config = json.load(config_file)
+    def __init__(self):
         self.connection = None
         self.cursor = None
 
     def connect(self):
-        self.connection = psycopg2.connect(**self.db_config)
+        with open('api/db_config.json', 'r') as config_file:
+            config = json.load(config_file)
+        self.connection = psycopg2.connect(**config)
         self.cursor = self.connection.cursor()
 
     def close(self):
@@ -22,9 +21,7 @@ class SQLHandler:
     def execute_query(self, format_function, query_statement):
         try:
             self.connect()
-            # Execute the SQL query
             self.cursor.execute(query_statement)
-            # Fetch all rows from the executed query
             rows = self.cursor.fetchall()
             result = format_function(rows)
             return result
@@ -37,7 +34,6 @@ class SQLHandler:
     def execute_insert(self, insert_statement):
         try:
             self.connect()
-            # Execute the insert statement
             self.cursor.execute(insert_statement)
             self.connection.commit()
             return {"Message": "Insert successful"}
@@ -46,17 +42,15 @@ class SQLHandler:
             return {"Message": "Insert failed"}
         finally:
             self.close()
-            
-    # Function to execute a truncate statement
-    def execute_truncate(self, truncateStatement):
-        try:            
-            self.connect()                        
-            # Execute the truncate statement
-            self.cursor.execute(truncateStatement)
-            self.connection.commit()            
-            return {"Message": "Truncate successful"}        
+
+    def execute_truncate(self, truncate_statement):
+        try:
+            self.connect()
+            self.cursor.execute(truncate_statement)
+            self.connection.commit()
+            return {"Message": "Truncate successful"}
         except Exception as error:
             print(f"Error truncating PostgreSQL table: {error}")
-            return {"Message": "Truncate failed"}        
+            return {"Message": "Truncate failed"}
         finally:
             self.close()

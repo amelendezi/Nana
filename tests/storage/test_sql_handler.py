@@ -7,10 +7,42 @@ class TestSQLHandler(unittest.TestCase):
     def setUp(self):
         self.sql_handler = SQLHandler()
 
-    @patch('api.storage.sql_handler.SQLHandler.connect')
-    @patch('api.storage.sql_handler.SQLHandler.close')
-    @patch('api.storage.sql_handler.SQLHandler.cursor', new_callable=MagicMock)
-    @patch('api.storage.sql_handler.SQLHandler.connection', new_callable=MagicMock)
+    @patch.object(SQLHandler, 'connect')
+    @patch.object(SQLHandler, 'close')
+    @patch.object(SQLHandler, 'cursor', new_callable=MagicMock)
+    @patch.object(SQLHandler, 'connection', new_callable=MagicMock)
+    def test_execute_query_success(self, mock_connection, mock_cursor, mock_close, mock_connect):
+        """
+        Test that execute_query successfully fetches and formats data.
+        """
+        mock_cursor.fetchall.return_value = [(1, 'Alice'), (2, 'Bob')]
+        mock_format_function = MagicMock(return_value=[{'id': 1, 'name': 'Alice'}, {'id': 2, 'name': 'Bob'}])
+
+        result = self.sql_handler.execute_query("SELECT * FROM test_table", mock_format_function)
+        self.assertEqual(result, [{'id': 1, 'name': 'Alice'}, {'id': 2, 'name': 'Bob'}])
+        mock_cursor.execute.assert_called_once_with("SELECT * FROM test_table")
+        mock_cursor.fetchall.assert_called_once()
+        mock_format_function.assert_called_once_with([(1, 'Alice'), (2, 'Bob')])
+
+    @patch.object(SQLHandler, 'connect')
+    @patch.object(SQLHandler, 'close')
+    @patch.object(SQLHandler, 'cursor', new_callable=MagicMock)
+    @patch.object(SQLHandler, 'connection', new_callable=MagicMock)
+    def test_execute_query_failure(self, mock_connection, mock_cursor, mock_close, mock_connect):
+        """
+        Test that execute_query handles exceptions and returns an empty list.
+        """
+        mock_cursor.execute.side_effect = Exception("Query error")
+
+        result = self.sql_handler.execute_query("SELECT * FROM test_table", lambda x: x)
+        self.assertEqual(result, [])
+        mock_cursor.execute.assert_called_once_with("SELECT * FROM test_table")
+        mock_cursor.fetchall.assert_not_called()
+
+    @patch.object(SQLHandler, 'connect')
+    @patch.object(SQLHandler, 'close')
+    @patch.object(SQLHandler, 'cursor', new_callable=MagicMock)
+    @patch.object(SQLHandler, 'connection', new_callable=MagicMock)
     def test_execute_insert_success(self, mock_connection, mock_cursor, mock_close, mock_connect):
         """
         Test that execute_insert successfully executes an insert statement.
@@ -23,10 +55,10 @@ class TestSQLHandler(unittest.TestCase):
         mock_cursor.execute.assert_called_once_with("INSERT INTO test_table (id, name) VALUES (1, 'Alice')")
         mock_connection.commit.assert_called_once()
 
-    @patch('api.storage.sql_handler.SQLHandler.connect')
-    @patch('api.storage.sql_handler.SQLHandler.close')
-    @patch('api.storage.sql_handler.SQLHandler.cursor', new_callable=MagicMock)
-    @patch('api.storage.sql_handler.SQLHandler.connection', new_callable=MagicMock)
+    @patch.object(SQLHandler, 'connect')
+    @patch.object(SQLHandler, 'close')
+    @patch.object(SQLHandler, 'cursor', new_callable=MagicMock)
+    @patch.object(SQLHandler, 'connection', new_callable=MagicMock)
     def test_execute_insert_failure(self, mock_connection, mock_cursor, mock_close, mock_connect):
         """
         Test that execute_insert handles exceptions and returns an error message.
@@ -38,10 +70,10 @@ class TestSQLHandler(unittest.TestCase):
         mock_cursor.execute.assert_called_once_with("INSERT INTO test_table (id, name) VALUES (1, 'Alice')")
         mock_connection.commit.assert_not_called()
 
-    @patch('api.storage.sql_handler.SQLHandler.connect')
-    @patch('api.storage.sql_handler.SQLHandler.close')
-    @patch('api.storage.sql_handler.SQLHandler.cursor', new_callable=MagicMock)
-    @patch('api.storage.sql_handler.SQLHandler.connection', new_callable=MagicMock)
+    @patch.object(SQLHandler, 'connect')
+    @patch.object(SQLHandler, 'close')
+    @patch.object(SQLHandler, 'cursor', new_callable=MagicMock)
+    @patch.object(SQLHandler, 'connection', new_callable=MagicMock)
     def test_execute_truncate_success(self, mock_connection, mock_cursor, mock_close, mock_connect):
         """
         Test that execute_truncate successfully executes a truncate statement.
@@ -54,10 +86,10 @@ class TestSQLHandler(unittest.TestCase):
         mock_cursor.execute.assert_called_once_with("TRUNCATE TABLE test_table")
         mock_connection.commit.assert_called_once()
 
-    @patch('api.storage.sql_handler.SQLHandler.connect')
-    @patch('api.storage.sql_handler.SQLHandler.close')
-    @patch('api.storage.sql_handler.SQLHandler.cursor', new_callable=MagicMock)
-    @patch('api.storage.sql_handler.SQLHandler.connection', new_callable=MagicMock)
+    @patch.object(SQLHandler, 'connect')
+    @patch.object(SQLHandler, 'close')
+    @patch.object(SQLHandler, 'cursor', new_callable=MagicMock)
+    @patch.object(SQLHandler, 'connection', new_callable=MagicMock)
     def test_execute_truncate_failure(self, mock_connection, mock_cursor, mock_close, mock_connect):
         """
         Test that execute_truncate handles exceptions and returns an error message.
