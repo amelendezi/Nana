@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+      "module": "es6",
+      "target": "es5",
+      "moduleResolution": "node",  // Add this line
+      "outDir": "./dist",
+      "rootDir": "./src",
+      "esModuleInterop": true,     // Add this line
+      "forceConsistentCasingInFileNames": true,
+      "skipLibCheck": true         // Optional, skips checking of type definition files
+    },
+    "include": ["src/**/*"]
+  }
+  
